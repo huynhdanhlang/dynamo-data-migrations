@@ -171,6 +171,7 @@ async function loadAwsConfig(inputProfile: string) {
             dynamodb: {
                 region: AWS.config.region,
                 endpoint: profileConfig.dynamoDbEndpoint,
+                credentials: profileConfig.mode === 'local' ? null : undefined,
             },
         });
     } else {
