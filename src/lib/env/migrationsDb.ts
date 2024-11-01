@@ -166,17 +166,15 @@ async function loadAwsConfig(inputProfile: string) {
             accessKeyId: profileConfig.accessKeyId,
             secretAccessKey: profileConfig.secretAccessKey,
         });
+    } else if (profileConfig && profileConfig.dynamoDbEndpoint) {
+        AWS.config.update({
+            dynamodb: {
+                region: AWS.config.region,
+                endpoint: profileConfig.dynamoDbEndpoint,
+            },
+        });
     } else {
         // Load config from shared credentials file if present
         AWS.config.credentials = new AWS.SharedIniFileCredentials({ profile: inputProfile });
-
-        if (profileConfig && profileConfig.dynamoDbEndpoint) {
-            AWS.config.update({
-                dynamodb: {
-                    region: AWS.config.region,
-                    endpoint: profileConfig.dynamoDbEndpoint,
-                },
-            });
-        }
     }
 }
