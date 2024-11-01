@@ -238,19 +238,36 @@ describe("migrationsDb", () => {
             const dynamodbTest = await migrationsDb.getDdb();
             expect(dynamodbTest.config.region).toStrictEqual('testRegion');
             expect(dynamodbTest.config.endpoint).toStrictEqual('http://localhost:4567');
+            expect(dynamodbTest.config.credentials).toBeDefined()
+        });
+
+        it('should update configure dynamo endpoint and default credential base on input file', async () => {
+            jest.spyOn(config, 'loadAWSConfig').mockResolvedValue([{
+                region: 'testRegion',
+                dynamoDbEndpoint: 'http://localhost:4567',
+                mode: 'local',
+            }]);
+
+            const dynamodbTest = await migrationsDb.getDdb();
+            expect(dynamodbTest.config.region).toStrictEqual('testRegion');
+            expect(dynamodbTest.config.endpoint).toStrictEqual('http://localhost:4567');
+            expect(dynamodbTest.config.credentials).toBeNull()
         });
 
         it('should load dynamodb instance base on endpoint of input file', async () => {
             jest.spyOn(config, 'loadAWSConfig').mockResolvedValue([{
                 region: 'testRegion',
+                mode: 'local',
             }]);
             jest.spyOn(AWS, 'DynamoDB').mockImplementation(() => {
                 return new DynamoDB({ endpoint: 'http://localhost:4567' })
             });
 
             const dynamodbTest = await migrationsDb.getDdb();
+            expect(dynamodbTest).toBeDefined();
             expect(dynamodbTest.config.region).toStrictEqual('testRegion');
             expect(dynamodbTest.config.endpoint).toStrictEqual('http://localhost:4567');
+            expect(dynamodbTest.config.credentials).toBeNull();
         })
     })
 })

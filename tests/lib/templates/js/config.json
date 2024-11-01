@@ -4,7 +4,9 @@
             "profile": "",
             "region": "",
             "accessKeyId": "test",
-            "secretAccessKey": "testt"
+            "secretAccessKey": "testt",
+            "dynamoDbEndpoint": "",
+            "mode": "local"
         }
     ],
     "migrationsDir": "migrations",
