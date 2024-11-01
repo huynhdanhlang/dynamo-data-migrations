@@ -2,7 +2,10 @@
 import * as tsImport from 'ts-import';
 
 export async function importFile(importPath: string) {
-    return tsImport.load(importPath);
+    return tsImport.load(importPath, {
+        mode: tsImport.LoadMode.Compile,
+        compiledJsExtension: '.js',
+    });
 }
 
 export async function importCjs(importPath: string) {
