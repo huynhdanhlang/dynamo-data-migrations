@@ -1,6 +1,6 @@
 import AWS from 'aws-sdk';
 import AWSMock from 'aws-sdk-mock';
-import { CreateTableInput, PutItemInput, DescribeTableInput, ScanInput, ItemList, DeleteItemInput } from 'aws-sdk/clients/dynamodb';
+import DynamoDB, { CreateTableInput, PutItemInput, DescribeTableInput, ScanInput, ItemList, DeleteItemInput } from 'aws-sdk/clients/dynamodb';
 import sinon from 'sinon';
 
 import * as migrationsDb from "../../../src/lib/env/migrationsDb";
@@ -228,5 +228,29 @@ describe("migrationsDb", () => {
             expect(dynamodbDevDefault.config.credentials?.accessKeyId).toStrictEqual('defaultAccess');
             expect(dynamodbDevDefault.config.credentials?.secretAccessKey).toStrictEqual('defaultSecret');
         });
+
+        it('should update configure dynamo endpoint base on input file', async () => {
+            jest.spyOn(config, 'loadAWSConfig').mockResolvedValue([{
+                region: 'testRegion',
+                dynamoDbEndpoint: 'http://localhost:4567',
+            }]);
+
+            const dynamodbTest = await migrationsDb.getDdb();
+            expect(dynamodbTest.config.region).toStrictEqual('testRegion');
+            expect(dynamodbTest.config.endpoint).toStrictEqual('http://localhost:4567');
+        });
+
+        it('should load dynamodb instance base on endpoint of input file', async () => {
+            jest.spyOn(config, 'loadAWSConfig').mockResolvedValue([{
+                region: 'testRegion',
+            }]);
+            jest.spyOn(AWS, 'DynamoDB').mockImplementation(() => {
+                return new DynamoDB({ endpoint: 'http://localhost:4567' })
+            });
+
+            const dynamodbTest = await migrationsDb.getDdb();
+            expect(dynamodbTest.config.region).toStrictEqual('testRegion');
+            expect(dynamodbTest.config.endpoint).toStrictEqual('http://localhost:4567');
+        })
     })
 })
