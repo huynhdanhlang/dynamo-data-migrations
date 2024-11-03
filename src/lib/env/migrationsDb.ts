@@ -167,11 +167,12 @@ async function loadAwsConfig(inputProfile: string) {
             secretAccessKey: profileConfig.secretAccessKey,
         });
     } else if (profileConfig && profileConfig.dynamoDbEndpoint) {
+        AWS.config.credentials = profileConfig.mode === 'local' ? null : undefined
         AWS.config.update({
             dynamodb: {
                 region: AWS.config.region,
                 endpoint: profileConfig.dynamoDbEndpoint,
-                credentials: profileConfig.mode === 'local' ? null : undefined,
+                credentials: AWS.config.credentials,
             },
         });
     } else {
