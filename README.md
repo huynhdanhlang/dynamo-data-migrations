@@ -1,6 +1,7 @@
 ![Build Badge](https://github.com/technogise/dynamo-data-migrations/actions/workflows/pr.yml/badge.svg)
 
 ## Introduction
+This project was forked from [`dynamo-data-migrations`](https://github.com/technogise/dynamo-data-migrations). Original released by [`Technogise`](https://github.com/technogise).
 
 `dynamo-data-migrations` is a database migration tool with DynamoDb support. It supports generation of migration file with extension `.ts`(TS projects), `.cjs`(CJS type JS projects) or `.mjs`(ESM type JS projects) as per source project language.
 
