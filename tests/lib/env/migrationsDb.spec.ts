@@ -263,7 +263,19 @@ describe("migrationsDb", () => {
                 return new DynamoDB({ endpoint: 'http://localhost:4567' })
             });
 
+            jest.doMock('aws-sdk', () => {
+                return {
+                    config: {
+                        credentials: null
+                    }         
+                }
+            });
+
+            const AWSMocked = require('aws-sdk');
+
             const dynamodbTest = await migrationsDb.getDdb();
+            expect(AWSMocked.config.credentials).toBeNull();
+            expect(dynamodbTest).toBeDefined();
             expect(dynamodbTest).toBeDefined();
             expect(dynamodbTest.config.region).toStrictEqual('testRegion');
             expect(dynamodbTest.config.endpoint).toStrictEqual('http://localhost:4567');
